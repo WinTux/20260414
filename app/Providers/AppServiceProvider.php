@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Prometheus\CollectorRegistry;
-use Prometheus\Storage\InMemory;
+use Prometheus\Storage\Redis;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +14,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(CollectorRegistry::class, function () {
-          return new CollectorRegistry(new InMemory());
+          return new CollectorRegistry(new Redis([
+            'host' => 'redis',
+            'port' => 6379,
+          ]));
         });
     }
 

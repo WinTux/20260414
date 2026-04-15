@@ -1,7 +1,7 @@
 <?php
 use App\Http\Controllers\ProductoController;
 use Illuminate\Support\Facades\Route;
-use Prometheus\CollctorRegistry;
+use Prometheus\CollectorRegistry;
 use Prometheus\RenderTextFormat;
 
 Route::middleware([\App\Http\Middleware\PrometheusMiddleware::class])

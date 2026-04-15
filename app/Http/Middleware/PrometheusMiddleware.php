@@ -17,6 +17,8 @@ class PrometheusMiddleware
     {
         $response = $next($request);
         $registry = app(CollectorRegistry::class);
+        $start = microtime(true);
+        $duration = microtime(true) - $start;
         $counter = $registry->getOrRegisterCounter(
             'app',
             'http_requests_total',
@@ -28,6 +30,21 @@ class PrometheusMiddleware
             $request->path(),
             $response->getStatusCode()
         ]);
+
+        $histogram = $registry->getOrRegisterHistogram(
+            'app',
+            'http_request_duracion_segundos',
+            'Total duracion en segundos',
+            ['method','endpoint']
+
+        );
+        $histogram->observe($duration, [
+            $request->method(),
+            $request->path(),
+        ]);
+
+
+
         return $response;
     }
 }
