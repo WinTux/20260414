@@ -42,8 +42,18 @@ class PrometheusMiddleware
             $request->method(),
             $request->path(),
         ]);
-
-
+        // Errores
+        if($response->getStatusCode() >= 400) {
+            $errors = $registry->getOrRegisterCounter(
+                'app',
+                'http_total_errores',
+                'Total de errores HTTP',
+                ['status']
+            );
+            $errors->inc([
+                $response->getStatusCode()
+            ]);
+        }
 
         return $response;
     }
